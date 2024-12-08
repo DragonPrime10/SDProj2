@@ -11,7 +11,7 @@ class DataReceiver:
     def __init__(self, root):
         self.root = root
         self.root.title("IMU & GPS Data Display")
-        self.root.geometry("300x400")  # Set a fixed window size
+        self.root.geometry("960x540")  # Set a fixed window size
         self.root.resizable(False, False)  # Disable window resizing
 
         # Initialize GUI components
@@ -110,12 +110,19 @@ class DataReceiver:
     def format_gps_data(self, data):
         # Format GPS data if available
         if "GPS_Time" in data:
-            time_str = data["GPS_Time"]
-            data["GPS_Time"] = f"{time_str[:2]}:{time_str[2:4]}:{time_str[4:6]}"
+            if data["GPS_Time"] == 0:
+                data["GPS_Time"] = "N/A"
+            else:
+                time_str = data["GPS_Time"]
+                data["GPS_Time"] = f"{time_str[:2]}:{time_str[2:4]}:{time_str[4:6]}"
         
         if "GPS_Latitude" in data and "GPS_Longitude" in data:
-            data["GPS_Latitude"] = self.format_lat_lon(data["GPS_Latitude"], "latitude")
-            data["GPS_Longitude"] = self.format_lat_lon(data["GPS_Longitude"], "longitude")
+            if data["GPS_Latitude"] == 0:
+                data["GPS_Latitude"] = "N/A"
+                data["GPS_Longitude"] = "N/A"
+            else:
+                data["GPS_Latitude"] = self.format_lat_lon(data["GPS_Latitude"], "latitude")
+                data["GPS_Longitude"] = self.format_lat_lon(data["GPS_Longitude"], "longitude")
 
     def format_lat_lon(self, value, coord_type):
         # Format latitude/longitude in degrees and add N/S or E/W
